@@ -15,21 +15,38 @@
   firebase.analytics();
   
   var database=firebase.database()
-  
+
   function sendSurvey()
   {
 	  //getting the value from the form to firebase database and saving
 	  //them in the variables
+	  Swal.fire({
+	  position: 'center',
+	  icon: 'success',
+	  title: 'Thanks',
+	  showConfirmButton: false,
+	  timer: 1500
+	})
 	  var name=document.getElementById("name").value;
+	  localStorage.setItem("NAME",name);
+	  document.getElementById("name").value="";
 	  var email=document.getElementById("email").value;
+	  document.getElementById("email").value="";
 	  var mobile=document.getElementById("mobile").value;
+	  document.getElementById("mobile").value="";
 	  var investor=document.getElementById("investor").checked;
+	  document.getElementById("investor").checked=false;
 	  var startups=document.getElementById("startups").checked;
+	  document.getElementById("startups").checked=false;
 	  var experience=document.getElementById("experience").checked;
+	  document.getElementById("experience").checked=false;
 	  var finance=document.getElementById("finance").checked;
+	  document.getElementById("finance").checked=false;
 	  var message=document.getElementById("message").value;
+	  document.getElementById("message").value="";
 	  
 	  var newMessagekey=database.ref().child('surveys').push().key;
+	  localStorage.setItem("UID",newMessagekey);
 	  
 	  database.ref('surveys/'+newMessagekey+'/Name').set(name);
 	  database.ref('surveys/'+newMessagekey+'/Email').set(email);
@@ -42,29 +59,37 @@
   }
   function postPComment()
   {
-	  var name=document.getElementById("name").value;
-	  var positive_comment=document.getElementById("positive_comment").value;
-	  
-	  var newMessagekey=database.ref().child('positive_comment').push().key;
-	  
-	  if(name=="")
-		  name="unknown user";
+	var name=localStorage.getItem("NAME");
+	var uid=localStorage.getItem("UID");
+	var positive_comment=document.getElementById("positive_comment").value;
+	document.getElementById("positive_comment").value = "";
+	
+	  if (positive_comment!=""){
+		 var newMessagekey=database.ref().child('positive_comments').push().key;
+		  if(name=="")
+			  name="unknown user";
 
-	  database.ref('positive_comments/'+newMessagekey+'/Name').set(name);
-	  database.ref('positive_comments/'+newMessagekey+'/Comment').set(positive_comment);
+		  database.ref('positive_comments/'+newMessagekey+'/Name').set(name);
+		  database.ref('positive_comments/'+newMessagekey+'/Comment').set(positive_comment);
+		  database.ref('positive_comments/'+newMessagekey+'/UID').set(uid);
+	  }
   }
   function postNComment()
   {
-	  var name=document.getElementById("name").value;
+	  var name=localStorage.getItem("NAME");
+	  var uid=localStorage.getItem("UID");
 	  var negative_comment=document.getElementById("negative_comment").value;
-	  
-	  var newMessagekey=database.ref().child('negative_comment').push().key;
-	  
-	  if(name=="")
-		  name="unknown user";
-	  
-	  database.ref('negative_comment/'+newMessagekey+'/Name').set(name);
-	  database.ref('negative_comment/'+newMessagekey+'/Comment').set(negative_comment);
+	  document.getElementById("negative_comment").value="";
+	  if (negative_comment!=""){
+		  var newMessagekey=database.ref().child('negative_comments').push().key;
+		  
+		  if(name=="")
+			  name="unknown user";
+		  
+		  database.ref('negative_comments/'+newMessagekey+'/Name').set(name);
+		  database.ref('negative_comments/'+newMessagekey+'/Comment').set(negative_comment);
+		  database.ref('negative_comments/'+newMessagekey+'/UID').set(uid);
+	  }
   }
   firebase.database().ref('positive_comments').on('value',(data)=>{
 	  var OurData=data.val();
@@ -83,7 +108,7 @@
 		  
 	  }
   })
-  firebase.database().ref('negative_comment').on('value',(data)=>{
+  firebase.database().ref('negative_comments').on('value',(data)=>{
 	  var OurData=data.val();
 	  var keys=Object.keys(OurData);
 	  var list = document.getElementById("ncomment");
@@ -100,3 +125,9 @@
 		  
 	  }
   })
+  function viewPcomment() {
+	  document.getElementById("viewcomment").src = "pcomment.html";
+	}
+	function viewNcomment() {
+		document.getElementById("viewcomment").src = "ncomment.html";
+	}

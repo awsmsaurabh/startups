@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	</head>
+	<body>
+		<form id="comment" action="#">
+			<span>Negative comment</span><br>
+			<textarea id="negative_comment" cols="50" rows="3"> </textarea><br>
+			<button id="ncbutton" type="button" onclick="postNComment()">Post</button>
+		</form>
+		<div id="ncomment">
+			<span>Negative Comments</span>
+		</div>
+		<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>
